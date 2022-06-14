@@ -1,0 +1,27 @@
+syntax = "proto3";
+package pricing;
+
+message ProductPrice {
+    string sku = 1;
+    double originalPrice = 2;
+    double finalPrice = 3;
+}
+
+message ProductsPrices {
+    repeated ProductPrice productsPrices = 1;
+}
+
+message SingleProductPriceRequest {
+    string sku = 1;
+}
+
+message ProductsPricesRequest {
+    repeated string skus = 1;
+}
+
+service ProductPriceService {
+    rpc GetProductPriceBySku (SingleProductPriceRequest) returns (ProductPrice);
+    rpc GetProductsPricesBySkus (ProductsPricesRequest) returns (ProductsPrices);
+    rpc GetProductsPricesStreamBySkus (ProductsPricesRequest) returns (stream ProductPrice);
+}
+

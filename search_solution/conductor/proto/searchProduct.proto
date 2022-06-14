@@ -1,0 +1,32 @@
+syntax = "proto3";
+package searchProduct;
+
+import "stock.proto";
+import "price.proto";
+import "product.proto";
+
+message CompleteProduct {
+    product.Product product = 1;
+    stock.ProductStock stock = 2;
+    pricing.ProductPrice price = 3;
+}
+
+message CompleteProducts {
+    repeated CompleteProduct product = 1;
+}
+
+message TermRequest {
+    string term = 1;
+}
+
+message SkuRequest {
+    string sku = 1;
+}
+
+service SearchProductService {
+    rpc GetProductsDataByTerm (TermRequest) returns (CompleteProducts);
+    rpc GetProductsDataStreamByTerm (TermRequest) returns (stream CompleteProduct);
+    rpc GetProductsDataBySkusStream (stream SkuRequest) returns (CompleteProducts);
+    rpc GetProductsDataStreamBySkusStream (stream SkuRequest) returns (stream CompleteProduct);
+}
+
