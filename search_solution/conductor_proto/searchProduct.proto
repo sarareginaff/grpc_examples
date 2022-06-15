@@ -1,9 +1,9 @@
 syntax = "proto3";
 package searchProduct;
 
-import "stock.proto";
-import "price.proto";
-import "product.proto";
+import "stock_proto/stock.proto";
+import "pricing_proto/price.proto";
+import "product_proto/product.proto";
 
 message CompleteProduct {
     product.Product product = 1;

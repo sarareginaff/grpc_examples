@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import searchProduct_pb2 as searchProduct__pb2
+from conductor_proto import searchProduct_pb2 as conductor__proto_dot_searchProduct__pb2
 
 
 class SearchProductServiceStub(object):
@@ -16,23 +16,23 @@ class SearchProductServiceStub(object):
         """
         self.GetProductsDataByTerm = channel.unary_unary(
                 '/searchProduct.SearchProductService/GetProductsDataByTerm',
-                request_serializer=searchProduct__pb2.TermRequest.SerializeToString,
-                response_deserializer=searchProduct__pb2.CompleteProducts.FromString,
+                request_serializer=conductor__proto_dot_searchProduct__pb2.TermRequest.SerializeToString,
+                response_deserializer=conductor__proto_dot_searchProduct__pb2.CompleteProducts.FromString,
                 )
         self.GetProductsDataStreamByTerm = channel.unary_stream(
                 '/searchProduct.SearchProductService/GetProductsDataStreamByTerm',
-                request_serializer=searchProduct__pb2.TermRequest.SerializeToString,
-                response_deserializer=searchProduct__pb2.CompleteProduct.FromString,
+                request_serializer=conductor__proto_dot_searchProduct__pb2.TermRequest.SerializeToString,
+                response_deserializer=conductor__proto_dot_searchProduct__pb2.CompleteProduct.FromString,
                 )
         self.GetProductsDataBySkusStream = channel.stream_unary(
                 '/searchProduct.SearchProductService/GetProductsDataBySkusStream',
-                request_serializer=searchProduct__pb2.SkuRequest.SerializeToString,
-                response_deserializer=searchProduct__pb2.CompleteProducts.FromString,
+                request_serializer=conductor__proto_dot_searchProduct__pb2.SkuRequest.SerializeToString,
+                response_deserializer=conductor__proto_dot_searchProduct__pb2.CompleteProducts.FromString,
                 )
         self.GetProductsDataStreamBySkusStream = channel.stream_stream(
                 '/searchProduct.SearchProductService/GetProductsDataStreamBySkusStream',
-                request_serializer=searchProduct__pb2.SkuRequest.SerializeToString,
-                response_deserializer=searchProduct__pb2.CompleteProduct.FromString,
+                request_serializer=conductor__proto_dot_searchProduct__pb2.SkuRequest.SerializeToString,
+                response_deserializer=conductor__proto_dot_searchProduct__pb2.CompleteProduct.FromString,
                 )
 
 
@@ -68,23 +68,23 @@ def add_SearchProductServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetProductsDataByTerm': grpc.unary_unary_rpc_method_handler(
                     servicer.GetProductsDataByTerm,
-                    request_deserializer=searchProduct__pb2.TermRequest.FromString,
-                    response_serializer=searchProduct__pb2.CompleteProducts.SerializeToString,
+                    request_deserializer=conductor__proto_dot_searchProduct__pb2.TermRequest.FromString,
+                    response_serializer=conductor__proto_dot_searchProduct__pb2.CompleteProducts.SerializeToString,
             ),
             'GetProductsDataStreamByTerm': grpc.unary_stream_rpc_method_handler(
                     servicer.GetProductsDataStreamByTerm,
-                    request_deserializer=searchProduct__pb2.TermRequest.FromString,
-                    response_serializer=searchProduct__pb2.CompleteProduct.SerializeToString,
+                    request_deserializer=conductor__proto_dot_searchProduct__pb2.TermRequest.FromString,
+                    response_serializer=conductor__proto_dot_searchProduct__pb2.CompleteProduct.SerializeToString,
             ),
             'GetProductsDataBySkusStream': grpc.stream_unary_rpc_method_handler(
                     servicer.GetProductsDataBySkusStream,
-                    request_deserializer=searchProduct__pb2.SkuRequest.FromString,
-                    response_serializer=searchProduct__pb2.CompleteProducts.SerializeToString,
+                    request_deserializer=conductor__proto_dot_searchProduct__pb2.SkuRequest.FromString,
+                    response_serializer=conductor__proto_dot_searchProduct__pb2.CompleteProducts.SerializeToString,
             ),
             'GetProductsDataStreamBySkusStream': grpc.stream_stream_rpc_method_handler(
                     servicer.GetProductsDataStreamBySkusStream,
-                    request_deserializer=searchProduct__pb2.SkuRequest.FromString,
-                    response_serializer=searchProduct__pb2.CompleteProduct.SerializeToString,
+                    request_deserializer=conductor__proto_dot_searchProduct__pb2.SkuRequest.FromString,
+                    response_serializer=conductor__proto_dot_searchProduct__pb2.CompleteProduct.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -108,8 +108,8 @@ class SearchProductService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/searchProduct.SearchProductService/GetProductsDataByTerm',
-            searchProduct__pb2.TermRequest.SerializeToString,
-            searchProduct__pb2.CompleteProducts.FromString,
+            conductor__proto_dot_searchProduct__pb2.TermRequest.SerializeToString,
+            conductor__proto_dot_searchProduct__pb2.CompleteProducts.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -125,8 +125,8 @@ class SearchProductService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/searchProduct.SearchProductService/GetProductsDataStreamByTerm',
-            searchProduct__pb2.TermRequest.SerializeToString,
-            searchProduct__pb2.CompleteProduct.FromString,
+            conductor__proto_dot_searchProduct__pb2.TermRequest.SerializeToString,
+            conductor__proto_dot_searchProduct__pb2.CompleteProduct.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -142,8 +142,8 @@ class SearchProductService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.stream_unary(request_iterator, target, '/searchProduct.SearchProductService/GetProductsDataBySkusStream',
-            searchProduct__pb2.SkuRequest.SerializeToString,
-            searchProduct__pb2.CompleteProducts.FromString,
+            conductor__proto_dot_searchProduct__pb2.SkuRequest.SerializeToString,
+            conductor__proto_dot_searchProduct__pb2.CompleteProducts.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -159,7 +159,7 @@ class SearchProductService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.stream_stream(request_iterator, target, '/searchProduct.SearchProductService/GetProductsDataStreamBySkusStream',
-            searchProduct__pb2.SkuRequest.SerializeToString,
-            searchProduct__pb2.CompleteProduct.FromString,
+            conductor__proto_dot_searchProduct__pb2.SkuRequest.SerializeToString,
+            conductor__proto_dot_searchProduct__pb2.CompleteProduct.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

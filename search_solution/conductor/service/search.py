@@ -14,11 +14,10 @@ from pb.price_pb2 import ProductsPricesRequest, ProductsPrices, ProductPrice
 STOCK_HOST = 'localhost:50051'
 PRODUCT_HOST = 'localhost:50052'
 PRICE_HOST = 'localhost:50054'
-#https://grpc.io/docs/guides/auth/#python
 
 class SearchProductService(SearchProductServiceServicer):
 
-    # Tudo síncrono e unário --> busca 
+    # Tudo síncrono e unário
     # Chega o termo, junta todas as informações, devolve a lista completa
     def GetProductsDataByTerm(self, request: TermRequest, context: grpc.aio.ServicerContext) -> CompleteProduct:
         print(f"[unary-unary] Retrieving products data based on term {request.term}")
@@ -46,7 +45,7 @@ class SearchProductService(SearchProductServiceServicer):
 
         return return_message
     
-    # Chegada unária e devolução em streaming --> busca
+    # Chegada unária e devolução em streaming
     # Chega o termo, junta informações de produto e estoque e a medida que preço for retornando, devolve o que for retornando
     def GetProductsDataStreamByTerm(self, request: TermRequest, context: grpc.aio.ServicerContext) -> CompleteProduct:
         print(f"[unary-stream] Retrieving products data based on term {request.term}")
@@ -62,8 +61,9 @@ class SearchProductService(SearchProductServiceServicer):
             products_stock = stock_stub.GetProductsStockBySkus(
                     ProductsStockRequest(skus = [p.sku for p in products.product]))
         
-        for p in products.product:
-            yield self._build_product_without_price(p, products_stock)
+        #É possível enviar mensagens de retorno mais de uma vez na mesma conexão
+        #for p in products.product:
+        #    yield self._build_product_without_price(p, products_stock)
 
         #Get Price data
         with grpc.insecure_channel(PRICE_HOST) as channel:
@@ -73,7 +73,7 @@ class SearchProductService(SearchProductServiceServicer):
                     ProductsPricesRequest(skus = [p.sku for p in products.product])):
                 yield self._build_complete_product_by_price_sku(products, products_stock, product_price)
 
-    # Chegada em streaming e devolução unária --> carrinho
+    # Chegada em streaming e devolução unária
     # Chega sku por sku e, quando acaba de receber, junta todas as informações, devolve a lista completa
     async def GetProductsDataBySkusStream(self, request_iterator: SkuRequest, context: grpc.aio.ServicerContext) -> CompleteProduct:
         print(f"[stream-unary] Retrieving products data based on skus streaming")
@@ -107,10 +107,9 @@ class SearchProductService(SearchProductServiceServicer):
 
         return return_message
 
-    # Chegada em streaming e devolução em streaming --> carrinho
+    # Chegada em streaming e devolução em streaming
     # Chega sku por sku, junta informações de produto e estoque e a medida que preço for retornando, devolve o que for retornando
     async def GetProductsDataStreamBySkusStream(self, request_iterator: SkuRequest, context: grpc.aio.ServicerContext) -> CompleteProduct:
-        pass
         print(f"[stream-stream] Retrieving products data based on skus streaming")
         async for req in request_iterator:
             print(f"[stream-stream] Received sku {req.sku}")
