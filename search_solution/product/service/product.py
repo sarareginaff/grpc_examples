@@ -1,4 +1,6 @@
 import grpc
+import time
+import random
 from pb.product_pb2_grpc import ProductServiceServicer
 from pb.product_pb2 import GetProductsBySkusRequest, GetProductsRequest, Product, Products
 from repository.product import ProductRepository
@@ -13,6 +15,7 @@ class ProductService(ProductServiceServicer):
         
         products.product.extend(repository.GetProductDataByTerm(term=request.term))
         
+        time.sleep(random.choice(range(3)))
         return products
 
     def GetProductsBySkus(self, request: GetProductsBySkusRequest, context: grpc.aio.ServicerContext) -> Product:
@@ -21,4 +24,5 @@ class ProductService(ProductServiceServicer):
         products = Products()
         products.product.extend(repository.GetProductDataBySkus(skus=request.skus))
         
+        time.sleep(random.choice(range(3)))
         return products

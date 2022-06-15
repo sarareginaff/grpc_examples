@@ -23,13 +23,13 @@ class SearchProductService(SearchProductServiceServicer):
         print(f"[unary-unary] Retrieving products data based on term {request.term}")
 
         try:
-            #Get Product data
+            print(f"[unary-unary] Retrieving products")
             products = self._get_products(term = request.term)
 
-            #Get Stock data
+            print(f"[unary-unary] Retrieving products stock data")
             products_stock = self._get_products_stock_by_skus(skus = [p.sku for p in products.product])
             
-            #Get Price data
+            print(f"[unary-unary] Retrieving products prices data")
             products_prices = self._get_products_prices_by_skus(skus = [p.sku for p in products.product])
 
             return self._build_complete_products(products, products_stock, products_prices)
@@ -47,18 +47,20 @@ class SearchProductService(SearchProductServiceServicer):
         print(f"[unary-stream] Retrieving products data based on term {request.term}")
 
         try:
-            #Get Product data
+            print(f"[unary-stream] Retrieving products")
             products = self._get_products(term = request.term)
 
-            #Get Stock data
+            print(f"[unary-stream] Retrieving products stock data")
             products_stock = self._get_products_stock_by_skus(skus = [p.sku for p in products.product])
             
             #Eh possível enviar mensagens no meio da comunicação e depois continuar algum cálculo e enviar novamente
+            print(f"[unary-stream] Returning all data retrieved by now")
             for p in products.product:
                 yield self._build_product_without_price(p, products_stock)
 
-            #Get Price data
+            print(f"[unary-stream] Retrieving products prices data")
             for product_price in self._get_products_prices_stream_by_skus(skus = [p.sku for p in products.product]):
+                print(f"[unary-stream] Returning data for sku {product_price.sku}")
                 yield self._build_complete_product_by_price_sku(products, products_stock, product_price)
         except Exception as exc:
             message = f"[unary-stream] Error while retrieving data: {exc}"
@@ -76,15 +78,15 @@ class SearchProductService(SearchProductServiceServicer):
             skus = []
             async for req in request_iterator:
                 skus.append(req.sku)
-
             print(f"[stream-unary] Received skus {skus}")
-            #Get Product data
+           
+            print(f"[stream-unary] Retrieving products")
             products = self._get_products_by_skus_request(skus = skus)
             
-            #Get Stock data
+            print(f"[stream-unary] Retrieving products stock data")
             products_stock = self._get_products_stock_by_skus(skus = [p.sku for p in products.product])
             
-            #Get Price data
+            print(f"[stream-unary] Retrieving products prices data")
             products_prices = self._get_products_prices_by_skus(skus = [p.sku for p in products.product])
                        
             return self._build_complete_products(products, products_stock, products_prices)
@@ -104,17 +106,19 @@ class SearchProductService(SearchProductServiceServicer):
         try:
             async for req in request_iterator:
                 print(f"[stream-stream] Received sku {req.sku}")
-                #Get Product data
+                
+                print(f"[stream-stream] Retrieving product")
                 products = self._get_products_by_skus_request(skus = [req.sku])
 
                 if (products.product):
-                    #Get Stock data
+                    print(f"[stream-stream] Retrieving product stock data")
                     products_stock = self._get_products_stock_by_skus(skus = [p.sku for p in products.product])
 
-                    #Get Price data
+                    print(f"[stream-stream] Retrieving product price data")
                     products_prices = self._get_products_prices_by_skus(skus = [p.sku for p in products.product])     
-                    for products_prices in products_prices.productsPrices:
-                        yield self._build_complete_product_by_price_sku(products, products_stock, products_prices)
+                    for product_price in products_prices.productsPrices:
+                        print(f"[stream-stream] Returning data for sku {product_price.sku}")
+                        yield self._build_complete_product_by_price_sku(products, products_stock, product_price)
         except Exception as exc:
             message = f"[stream-stream] Error while retrieving data: {exc}"
             print(message)
@@ -169,8 +173,6 @@ class SearchProductService(SearchProductServiceServicer):
         complete_products.product.extend(complete_products_list)
 
         return complete_products
-
-        
 
     def _build_product_without_price(self, product: Product, products_stock: ProductsStock) -> list:
         stock = [s for s in products_stock.productStock if s.sku == product.sku]
